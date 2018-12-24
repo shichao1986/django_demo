@@ -73,10 +73,22 @@ WSGI_APPLICATION = 'DjangoDemoProj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'djangodemo-db',
+        'USER': 'djangodemo-user',
+        'PASSWORD': 'password',
+        'HOST': '10.6.3.29',
+        'PORT': '25432',
+        'CONN_MAX_AGE': 600,
     }
 }
 

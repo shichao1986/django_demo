@@ -1,0 +1,14 @@
+安装环境为ubuntu 14.04.1
+python3.6.2
+django1.11.2
+安装步骤参考连接：http://www.runoob.com/django/django-tutorial.html
+创建项目参考连接：http://www.runoob.com/django/django-first-app.html
+
+创建项目和安装项目步骤：
+1、创建项目：django-admin.py startproject DjangoDemoProj
+2、进入项目DjangoDemoProj目录：cd DjangoDemoProj
+3、创建app： python3 manage.py startapp helloworld
+（django默认的数据库使用sqlite3，若python3在安装时没有安装sqlite3，则需要修改项目的settings.py文件。
+  将settings.py中的数据库配置修改为postgresql，本例中用到的postgresql使用docker部署，配置参看
+  docker-compose.yml文件）
+
