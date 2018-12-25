@@ -10,3 +10,16 @@ PostgreSQL_djangodemo:
   volumes:
     - /srv/docker/data/djangodemo-db:/var/lib/postgresql/data
   restart: always
+
+PostgreSQL_djangodemo2:
+  container_name: PostgreSQL_djangodemo2
+  image: postgres:9.4.5.1
+  environment:
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_USER=djangodemo-user
+    - POSTGRES_DB=djangodemo-db
+  ports:
+    - "25433:5432"
+  volumes:
+    - /srv/docker/data/djangodemo-db2:/var/lib/postgresql/data
+  restart: always

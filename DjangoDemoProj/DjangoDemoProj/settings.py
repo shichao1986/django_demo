@@ -89,9 +89,26 @@ DATABASES = {
         'HOST': '10.6.3.29',
         'PORT': '25432',
         'CONN_MAX_AGE': 600,
+    },
+    'postgresql_db1': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'djangodemo-db',
+            'USER': 'djangodemo-user',
+            'PASSWORD': 'password',
+            'HOST': '10.6.3.29',
+            'PORT': '25433',
+            'CONN_MAX_AGE': 600,
     }
 }
 
+# DATABASE_ROUTERS list 可以有多个，匹配的顺序按照list中的自然顺序从左向右
+DATABASE_ROUTERS = ['DjangoDemoProj.db_router.AppsDbRouter']
+
+# app与其使用的db的映射关系
+DATABASE_APPS_MAPPING = {
+    'helloworld':'postgresql_db1',
+    'reserved':'default',
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
