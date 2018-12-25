@@ -13,11 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from helloworld import views as helloworld_views
+from helloworld import usls as helloworld_urls
 
 urlpatterns = [
-    url(r'^hello/index$', helloworld_views.index),
+    # 直接在项目的urls里配置app中的url
+    # url(r'^hello/index$', helloworld_views.index),
+    # 引用app中的urls，各个app自己定义urls，解耦和
+    url(r'^', include(helloworld_urls)),
     url(r'^admin/', admin.site.urls),
 ]
