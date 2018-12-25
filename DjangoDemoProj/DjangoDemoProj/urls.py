@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from helloworld import views as helloworld_views
-from helloworld import usls as helloworld_urls
+from helloworld import urls as helloworld_urls
 
 urlpatterns = [
     # 直接在项目的urls里配置app中的url

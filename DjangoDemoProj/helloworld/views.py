@@ -5,5 +5,5 @@ from django.shortcuts import render
 
 # Create your views here.
 
-def index(request):
-    return HttpResponse('Hello world!')
+def index(request, name, age):
+    return HttpResponse('Hello world! {} is {} year(s) old.'.format(name, age))
