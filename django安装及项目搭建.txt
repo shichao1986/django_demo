@@ -12,8 +12,11 @@ django1.11.2
   将settings.py中的数据库配置修改为postgresql，本例中用到的postgresql使用docker部署，配置参看
   docker-compose.yml文件）
 4、修改项目的settings文件，添加新创建的app  helloworld 到  INSTALLED_APPS 中
-5、执行 python3 manage.py makemigrations
-6、执行 python3 manage.py migrate
-7、执行 python3 manage.py createsuperuser   创建超级用户
-
+5、修改数据库配置，将django自带的数据表存入default数据库，app相关数据表存入其他数据库
+6、在settings文件中配置数据库路由，具体参考settings文件
+7、执行 python3 manage.py makemigrations
+8、执行 python3 manage.py migrate
+9、执行 python3 manage.py createsuperuser   创建超级用户
+10、执行 python3 manage.py runserver 0:8001 启动服务，端口在8001
+11、使用浏览器访问 http://localhost:8001/admin
 
