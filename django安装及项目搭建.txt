@@ -11,4 +11,9 @@ django1.11.2
 （django默认的数据库使用sqlite3，若python3在安装时没有安装sqlite3，则需要修改项目的settings.py文件。
   将settings.py中的数据库配置修改为postgresql，本例中用到的postgresql使用docker部署，配置参看
   docker-compose.yml文件）
+4、修改项目的settings文件，添加新创建的app  helloworld 到  INSTALLED_APPS 中
+5、执行 python3 manage.py makemigrations
+6、执行 python3 manage.py migrate
+7、执行 python3 manage.py createsuperuser   创建超级用户
+
 
