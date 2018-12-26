@@ -3,6 +3,7 @@ python3.6.2
 django1.11.2
 安装步骤参考连接：http://www.runoob.com/django/django-tutorial.html
 创建项目参考连接：http://www.runoob.com/django/django-first-app.html
+django教程参考连接：https://code.ziqiangxuetang.com/django
 
 创建项目和安装项目步骤：
 1、创建项目：django-admin.py startproject DjangoDemoProj
