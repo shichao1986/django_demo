@@ -17,6 +17,10 @@ django教程参考连接：https://code.ziqiangxuetang.com/django
 6、在settings文件中配置数据库路由，具体参考settings文件
 7、执行 python3 manage.py makemigrations
 8、执行 python3 manage.py migrate
+(在执行 migrate 命令时，后边的参数中不指定--database 意为将所有应用尝试向default数据库同步
+在对具体应用下的model进行判断时，若model中无app_label则会默认使用app的名称作为app_label
+然后开始查询database_routers，若该model允许同步到指定的数据库则开始同步；对于使用多个数据库
+的django项目，此处需要增加--database 参数用于指定明确的目标db)
 9、执行 python3 manage.py createsuperuser   创建超级用户
 10、执行 python3 manage.py runserver 0:8001 启动服务，端口在8001
 11、使用浏览器访问 http://localhost:8001/admin
