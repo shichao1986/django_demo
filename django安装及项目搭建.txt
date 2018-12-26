@@ -25,3 +25,32 @@ django教程参考连接：https://code.ziqiangxuetang.com/django
 10、执行 python3 manage.py runserver 0:8001 启动服务，端口在8001
 11、使用浏览器访问 http://localhost:8001/admin
 
+问题记录：
+django 1.11.2
+1、django内部类 queryset 在使用下标取值时，下标0 取值错误，实际使用中出现过qt[0] 与 qt[1]相等的情形，复现过程
+执行python3 manage.py shell
+>>> from helloworld.models import *
+>>> p1 = Person.objects.get(name='张三')
+>>> p1
+<Person: 张三>
+>>> ps = Person.objects.all()
+>>> ps
+<QuerySet [<Person: 张三>, <Person: 李四>]>
+>>> ps[0]
+<Person: 张三>
+>>> ps[1]
+<Person: 李四>
+>>> p1.books
+<django.db.models.fields.related_descriptors.create_forward_many_to_many_manager.<locals>.ManyRelatedManager object at 0x7efe48d5fb00>
+>>> p1.books.all()
+<QuerySet [<Book: 笑傲江湖>, <Book: 绝代双骄>]>
+>>> bs = p1.books.all()
+>>> bs
+<QuerySet [<Book: 笑傲江湖>, <Book: 绝代双骄>]>
+>>> bs[0]
+<Book: 绝代双骄>
+>>> bs[1]
+<Book: 绝代双骄>
+>>>
+
+上述问题中，第50行和52行的结果重复，books为person类内的一个manytomany属性
