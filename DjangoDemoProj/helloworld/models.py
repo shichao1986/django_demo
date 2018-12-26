@@ -30,6 +30,9 @@ class Person(models.Model):
     age = models.IntegerField('年龄', null=False, default=0)
     school = models.ForeignKey(School, on_delete=models.SET_NULL, related_name='persons', verbose_name='学校',
                                help_text='指向学校的外键', default=None, null=True, blank=True)
+    # 在人员p1中直接调用books获取与p1有关系的所有book，此处直接获取所有book对象，如果不适用manytomany则需要在获取
+    # 关系后在遍历关系获取所有book对象，使用manytomany能够减少sql查询次数。
+    # related_name （person_relations）为Book类中对应的获取该书籍所有相关人员的属性
     books = models.ManyToManyField(Book, through='PersonBookRelation', through_fields=('person', 'book'), blank=True,
                                    related_name='person_relations', verbose_name='书籍')
 
@@ -40,9 +43,12 @@ class Person(models.Model):
         app_label = 'helloworld'
         db_table = 'person'
 
+# 人员和书籍的关系表
 class PersonBookRelation(models.Model):
+    # 在人员p1中读取relations直接获取人员p1的所有关系
     person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='relations', verbose_name='人员',
                                help_text='人员')
+    # 在书籍b1中读取relations直接获取书籍b1的所有关系
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='relations', verbose_name='书籍',
                              help_text='书籍')
 
