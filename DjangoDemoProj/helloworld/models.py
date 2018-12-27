@@ -33,6 +33,7 @@ class Person(models.Model):
     # 在人员p1中直接调用books获取与p1有关系的所有book，此处直接获取所有book对象，如果不适用manytomany则需要在获取
     # 关系后在遍历关系获取所有book对象，使用manytomany能够减少sql查询次数。
     # related_name （person_relations）为Book类中对应的获取该书籍所有相关人员的属性
+    # manytomany属性指定through model后不再使用add添加关系，而是通过对关系表的操作来达到manytomany属性的变化
     books = models.ManyToManyField(Book, through='PersonBookRelation', through_fields=('person', 'book'), blank=True,
                                    related_name='person_relations', verbose_name='书籍')
 

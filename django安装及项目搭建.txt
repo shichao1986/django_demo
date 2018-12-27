@@ -52,5 +52,13 @@ django 1.11.2
 >>> bs[1]
 <Book: 绝代双骄>
 >>>
+>>> li = list(bs)
+>>> li
+[<Book: 笑傲江湖>, <Book: 绝代双骄>]
+>>> li[0]
+<Book: 笑傲江湖>
+>>> li[1]
+<Book: 绝代双骄>
+>>>
 
-上述问题中，第50行和52行的结果重复，books为person类内的一个manytomany属性
+上述问题中，第50行和52行的结果重复，books为person类内的一个manytomany属性，将queryset转换成list后可以使用下标找到正确的值

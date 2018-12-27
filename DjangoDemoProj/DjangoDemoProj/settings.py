@@ -148,3 +148,70 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 配置django的日志
+'''
+disable_existing_loggers 为False 使用django默认的 loggers，此时
+DEBUG = True
+‘django’这个logger以及其（除了django.server之外的）所有下级的INFO以上的日志，都会被StreamHandler处理（输出到console）
+DEBUG = Flase
+‘django’这个logger以及其（除了django.server之外的）所有下级的ERROR和CRITICAL的日志，都会被AdminEmailHandler处理（发送至指定邮件）
+
+如果
+disable_existing_loggers 为True，则不适用django默认的loggers，此时需要重新定义
+‘django’这个logger，对于未定义的logger会失去对应的日志
+'''
+
+# 使用django发送邮件日志时的邮件配置
+EMAIL_HOST = 'mailmx.cyai.com'  # SMTP地址
+EMAIL_PORT = 25  # SMTP端口
+EMAIL_HOST_USER = 'chao_shi@cyai.com'  # 发送邮件的邮箱
+EMAIL_HOST_PASSWORD = '278503panpanpan'  # 我的邮箱密码
+EMAIL_SUBJECT_PREFIX = '[这是主题前缀]'  # 为邮件Subject-line前缀,默认是'[django]'
+EMAIL_USE_TLS = False  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
+# 管理员站点
+SERVER_EMAIL = 'unique1986@163.com'  # The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
+ADMINS = (('chao_shi', 'chao_shi@cyai.com'),)  # 接收邮件的邮箱（或邮件组）
+
+
+LOGGING = {
+    'version' :1,
+    # 使用默认的django loggers
+    'disable_existing_loggers' : False,
+    'formatters': {
+        'standard':{
+            'format':'%(asctime)s %(name)s %(levelname)s %(filename)s [%(funcName)s %(lineno)s]: %(message)s'
+        }
+    },
+    'filters': {
+
+    },
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+            'formatter':'standard'
+        },
+        'email_handler':{
+            'level':'ERROR',
+            'class':'django.utils.log.AdminEmailHandler',
+            'formatter':'standard'
+        }
+    },
+    'loggers':{
+        'log1':{
+            'handlers':['console'],
+            'level':'DEBUG',
+            'propagate': True
+        },
+        'log2':{
+            'handlers':['email_handler'],
+            'level':'ERROR',
+            'propagate':False
+        },
+        'django.db.backends':{
+            'handlers':['console'],
+            'level':'DEBUG' if DEBUG else 'INFO'
+        }
+    }
+}
