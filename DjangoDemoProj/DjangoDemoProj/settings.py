@@ -163,15 +163,16 @@ disable_existing_loggers 为True，则不适用django默认的loggers，此时�
 '''
 
 # 使用django发送邮件日志时的邮件配置
-EMAIL_HOST = 'mailmx.cyai.com'  # SMTP地址
+# 将配置修改正确即可
+EMAIL_HOST = 'smtp.xxxx.com'  # SMTP地址
 EMAIL_PORT = 25  # SMTP端口
-EMAIL_HOST_USER = 'chao_shi@cyai.com'  # 发送邮件的邮箱
-EMAIL_HOST_PASSWORD = '278503panpanpan'  # 我的邮箱密码
+EMAIL_HOST_USER = 'yourname@xxxx.com'  # 发送邮件的邮箱
+EMAIL_HOST_PASSWORD = '******'  # 我的邮箱密码
 EMAIL_SUBJECT_PREFIX = '[这是主题前缀]'  # 为邮件Subject-line前缀,默认是'[django]'
-EMAIL_USE_TLS = False  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
+EMAIL_USE_TLS = False  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false,根据邮件服务器的情况进行配置
 # 管理员站点
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER  # The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
-ADMINS = (('admin', 'chao_shi@cyai.com'),)  # 接收邮件的邮箱（或邮件组）
+ADMINS = (('admin', 'yourname@xxxx.com'),)  # 接收邮件的邮箱（或邮件组）,django 管理员用户
 
 
 LOGGING = {
@@ -192,6 +193,7 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter':'standard'
         },
+        # 该handler 会将邮件发送给ADMINS中定义的管理员及其邮箱
         'email_handler':{
             'level':'ERROR',
             'class':'django.utils.log.AdminEmailHandler',
@@ -204,11 +206,11 @@ LOGGING = {
             'level':'DEBUG',
             'propagate': True
         },
-        'log2':{
-            'handlers':['email_handler'],
-            'level':'ERROR',
-            'propagate':False
-        },
+        # 'log2':{
+        #     'handlers':['email_handler'],
+        #     'level':'ERROR',
+        #     'propagate':False
+        # },
         'django.db.backends':{
             'handlers':['console'],
             'level':'DEBUG' if DEBUG else 'INFO'
