@@ -170,8 +170,8 @@ EMAIL_HOST_PASSWORD = '278503panpanpan'  # 我的邮箱密码
 EMAIL_SUBJECT_PREFIX = '[这是主题前缀]'  # 为邮件Subject-line前缀,默认是'[django]'
 EMAIL_USE_TLS = False  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
 # 管理员站点
-SERVER_EMAIL = 'unique1986@163.com'  # The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
-ADMINS = (('chao_shi', 'chao_shi@cyai.com'),)  # 接收邮件的邮箱（或邮件组）
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER  # The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
+ADMINS = (('admin', 'chao_shi@cyai.com'),)  # 接收邮件的邮箱（或邮件组）
 
 
 LOGGING = {
