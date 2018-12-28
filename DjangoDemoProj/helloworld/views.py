@@ -74,9 +74,23 @@ schoolname = p1.school.name     此时不会查询数据库了
 或者是需要group by的，一般情况下相同值的列为group_by的，不相同的需要给出聚合方式
 如下例中'school__name','person_num'是最终显示的列，则school__name 为group_by，
 person_num 给出了聚合方式
-Person.objects.all().values('school__name').annotate(person_num=Count('name')).values('school__name','person_num')
+Person.objects.all().values('school__name').annotate(person_num=Count('name'))
 
 另外，django支持的聚合方式有'Avg'(求平均), 'Count'（计数）, 'Max'（最大）, 'Min'（最小）, 'StdDev'（标准差）,
  'Sum'（求和）, 'Variance'（方差）,见django.db.models.aggregates中的定义
+
+本例中使用的数据库为postgresql， postgresql 在聚合时不支持聚合函数group_concat
+我们首先在postgresql中自定义聚合函数如下：
+CREATE AGGREGATE group_concat(anyelement)
+(
+    sfunc = array_append, -- 每行的操作函数，将本行append到数组里
+    stype = anyarray,  -- 聚集后返回数组类型
+    initcond = '{}'    -- 初始化空数组
+);
+
+自定义的聚合函数会自动保存在对应的db中，对于docker启动的pg来说，只需要把对应的db映射出来即可实现自定义函数的
+持久化
+
+在pg中增加了group_concat函数后，我们可以继续添加group_concat的聚合方法，见my_concat.py
 
 '''
