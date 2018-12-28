@@ -10,17 +10,18 @@ class MyListField(TextField):
     # db to pathon
     def to_python(self, value):
         if value is None:
-            return []
+            return ''
         if isinstance(value, list):
             return value
-        return ast.literal_eval(value)
+        return value.split(',')
 
     # python to db
     def get_prep_value(self, value):
         if value is None or not isinstance(value, list):
-            return str([])
-        return str(value)
+            return ''
+        v_str = ','.join(value)
+        return v_str
 
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
-        return '[]' if value is None else self.get_prep_value(value)
+        return '' if value is None else self.get_prep_value(value)
