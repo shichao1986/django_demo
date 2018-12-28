@@ -2,9 +2,9 @@ from django.contrib import admin
 from . import models
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('name', 'age', 'favorates', 'school__name')
+    list_display = ('name', 'age', 'favorates', 'school')
     search_fields = ('name', 'age', 'favorates', 'school__name')
-    list_filter = ('school__name')
+    list_filter = ('school__name',)
 
     # 可以根据需求限制get请求的qset
     def get_queryset(self, request):
@@ -29,9 +29,11 @@ class PersonAdmin(admin.ModelAdmin):
         # TODO
         super(PersonAdmin, self).delete_model(request, obj)
 
+class SchoolAdmin(admin.ModelAdmin):
+    list_display = ('name', 'address')
 
 # Register your models here.
 admin.site.register(models.Person, PersonAdmin)
 admin.site.register(models.Book)
-admin.site.register(models.School)
+admin.site.register(models.School, SchoolAdmin)
 admin.site.register(models.PersonBookRelation)
