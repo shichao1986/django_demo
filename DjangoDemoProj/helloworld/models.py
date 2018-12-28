@@ -29,7 +29,7 @@ class Book(models.Model):
 class Person(models.Model):
     name = models.CharField('姓名', max_length=32, unique=False, help_text='姓名')
     age = models.IntegerField('年龄', null=False, default=0)
-    favorates = MyListField('爱好', default='', help_text='爱好清单')
+    favorates = MyListField('爱好', default='', help_text='爱好清单', blank=True)
     school = models.ForeignKey(School, on_delete=models.SET_NULL, related_name='persons', verbose_name='学校',
                                help_text='指向学校的外键', default=None, null=True, blank=True)
     # 在人员p1中直接调用books获取与p1有关系的所有book，此处直接获取所有book对象，如果不适用manytomany则需要在获取

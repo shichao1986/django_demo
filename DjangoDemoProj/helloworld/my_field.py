@@ -7,17 +7,23 @@ class MyListField(TextField):
     def __init__(self, *args, **kwargs):
         super(MyListField, self).__init__(*args, **kwargs)
 
-    # db to pathon
+    # db to pathon, django >= 1.8 use this function
+    def from_db_value(self, value, expression, connection, context):
+        if not value or not isinstance(value, str):
+            return []
+
+        return value.split(',')
+
+    # db to pathon, django <= 1.7 use this function
     def to_python(self, value):
-        if value is None:
-            return ''
-        if isinstance(value, list):
-            return value
+        if not value or not isinstance(value, str):
+            return []
+
         return value.split(',')
 
     # python to db
     def get_prep_value(self, value):
-        if value is None or not isinstance(value, list):
+        if not value or not isinstance(value, list):
             return ''
         v_str = ','.join(value)
         return v_str
