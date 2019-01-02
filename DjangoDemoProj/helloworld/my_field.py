@@ -33,6 +33,7 @@ class MyListField(TextField):
         value = self.value_from_object(obj)
         return '' if value is None else self.get_prep_value(value)
 
+# binary 类型的数据无法在django admin页面上显示
 class MyCompressTextField(BinaryField):
     def __init__(self, *args, **kwargs):
         super(MyCompressTextField, self).__init__(*args, **kwargs)
@@ -49,8 +50,10 @@ class MyCompressTextField(BinaryField):
         if not value or not isinstance(value, str):
             return ''.encode()
 
-        return zlib.compress(str.encode())
+        return zlib.compress(value.encode())
 
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
-        return b''.decode() if value is None else self.get_prep_value(value)
+        if not value or not isinstance(value, bytes):
+            return b''.decode()
+        return zlib.decompress(value).decode()
