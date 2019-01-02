@@ -1,7 +1,8 @@
 # coding : utf-8
 
-from django.db.models import TextField
+from django.db.models import TextField, BinaryField
 import ast
+import zlib
 
 class MyListField(TextField):
     def __init__(self, *args, **kwargs):
@@ -31,3 +32,25 @@ class MyListField(TextField):
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
         return '' if value is None else self.get_prep_value(value)
+
+class MyCompressTextField(BinaryField):
+    def __init__(self, *args, **kwargs):
+        super(MyCompressTextField, self).__init__(*args, **kwargs)
+
+    # db to python, django > 1.8
+    def from_db_value(self, value, expression, connection, context):
+        if not value or not isinstance(value, bytes):
+            return b''.decode()
+
+        return zlib.decompress(value).decode()
+
+    # python to db
+    def get_prep_value(self, value):
+        if not value or not isinstance(value, str):
+            return ''.encode()
+
+        return zlib.compress(str.encode())
+
+    def value_to_string(self, obj):
+        value = self.value_from_object(obj)
+        return b''.decode() if value is None else self.get_prep_value(value)
