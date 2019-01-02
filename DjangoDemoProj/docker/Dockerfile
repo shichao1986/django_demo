@@ -4,11 +4,13 @@ FROM django-demo:latest
 
 ENV PROJECT_DIR = '/home/cyuser/django_demo'
 
-# copy project
-COPY /home/cyuser/sc_dev/django_demo /home/cyuser/django_demo
+WORKDIR /home/cyuser/django_demo
 
-RUN cp /home/cyuser/django_demo/DjangoDemoProj/docker/django_demo_supervisor.conf /etc/supervisor/conf.d/django_demo_supervisor.conf
-RUN cp /home/cyuser/django_demo/DjangoDemoProj/docker/nginx_supervisor.conf /etc/supervisor/conf.d/nginx_supervisor.conf
+# copy project
+COPY /home/cyuser/sc_dev/django_demo/ /home/cyuser/django_demo
+
+COPY docker/django_demo_supervisor.conf /etc/supervisor/conf.d/django_demo_supervisor.conf
+COPY docker/nginx_supervisor.conf /etc/supervisor/conf.d/nginx_supervisor.conf
 
 ENTRYPOINT ["supervisord -c /home/cyuser/django_demo/DjangoDemoProj/docker/supervisord.conf"]
 
