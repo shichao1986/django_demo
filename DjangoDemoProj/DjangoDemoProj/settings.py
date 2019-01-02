@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# django项目的根目录
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -52,6 +53,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DjangoDemoProj.urls'
 
+# 模板文件django会在每个app的目录下的templates文件夹下搜索，此处
+# DIRS :[] 中增加的路径为公共模板的放置路径，此处的模板也会被django找到
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -147,7 +150,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+# STATIC_ROOT 用于执行 python manage.py collectstatic， 会将各个app下的static文件全部拷贝到STATIC_ROOT指定的路径下
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_URL 为每个app下的static文件路径，当执行python manage.py collectstatic时，django会将app下的所有static文件
+# 拷贝到STATIC_ROOT 下，为了避免拷贝和使用时产生混淆，每一个app的static文件夹和templeates文件夹内的内容都应该增加以
+# app名称命名的文件夹 例如  myapp/static/myapp/css，myapp/static/myapp/js，myapp/templates/myapp/index.html
 STATIC_URL = '/static/'
+
+# STATICFILES_DIRS 为公共的static文件夹存放位置，其内部的路径也是django可以找到的，默认为空
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 # 配置django的日志
 '''
