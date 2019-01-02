@@ -1,0 +1,8 @@
+django_demo:
+  container_name: django_demo
+  image: django_demo:latest
+  ports:
+    - "8001:8001"
+  volumes:
+    - /home/cyuser/sc_dev/django_demo:/home/cyuser/django_demo
+  restart: always
