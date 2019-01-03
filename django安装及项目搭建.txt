@@ -24,6 +24,10 @@ django教程参考连接：https://code.ziqiangxuetang.com/django
 9、执行 python3 manage.py createsuperuser   创建超级用户
 10、执行 python3 manage.py runserver 0:8001 启动服务，端口在8001
 11、使用浏览器访问 http://localhost:8001/admin
+12、本例程实现nginx+uwsgi+django的配置，nginx处理高并发的请求和静态资源的请求时性能超强，uwsgi实现了WSGI协议，WSGI是
+一种WEB服务器网关接口，是与WEB应用通信的一种规范，uwsgi可以提供多进程并处理高并发的网络请求，弥补了django单进程的缺陷
+13、使用supervisor管理nginx和uwsgi
+14、django支持单独启动也支持docker部署启动
 
 问题记录：
 django 1.11.2
