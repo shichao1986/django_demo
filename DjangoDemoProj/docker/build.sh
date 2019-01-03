@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -f Dockerfile -t django_demo:latest ..
+docker build -f Dockerfile -t django_demo:latest ...
