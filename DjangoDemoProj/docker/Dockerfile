@@ -11,6 +11,7 @@ COPY DjangoDemoProj /home/cyuser/DjangoDemoProj
 
 COPY DjangoDemoProj/docker/django_demo_supervisor.conf /etc/supervisor/conf.d/django_demo_supervisor.conf
 COPY DjangoDemoProj/docker/nginx_supervisor.conf /etc/supervisor/conf.d/nginx_supervisor.conf
+COPY DjangoDemoProj/docker/supervisord.conf /etc/supervisor/supervisord.conf
 
-ENTRYPOINT ["supervisord -c /home/cyuser/DjangoDemoProj/docker/supervisord.conf"]
+ENTRYPOINT ["supervisord -n"]
 
