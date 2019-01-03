@@ -2,7 +2,7 @@
 # 本docker file示范如何通过docker将项目部署为自启动
 FROM django-demo:latest
 
-ENV PROJECT_DIR = '/home/cyuser/DjangoDemoProj'
+ENV PROJECT_DIR="/home/cyuser/DjangoDemoProj"
 
 WORKDIR /home/cyuser
 
