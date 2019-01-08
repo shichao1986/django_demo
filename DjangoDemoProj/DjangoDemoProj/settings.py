@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-LOGIN_URL = 'admin/login/'
+LOGIN_URL = '/admin/login/'
 
 # Application definition
 
@@ -46,6 +46,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    #CSRF token用于防止csrf攻击，需要前端在每一个post请求中增加csrfmiddlewaretoken字段，
+    # put 和 delete时可在header头中增加HTTP_X_CSRFTOKEN（HTTP-X-CSRFTOKEN）
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
