@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -21,6 +22,7 @@ def index_old(request, name, age):
 def index3(request, name, age):
     return
 
+@login_required
 def sessiontest(request):
     return HttpResponse('session test')
 
