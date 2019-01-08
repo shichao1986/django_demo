@@ -21,6 +21,9 @@ def index_old(request, name, age):
 def index3(request, name, age):
     return
 
+def sessiontest(request):
+    return HttpResponse('session test')
+
 
 
 # django queryset 操作方法
