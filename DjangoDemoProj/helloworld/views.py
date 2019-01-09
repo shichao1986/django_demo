@@ -24,6 +24,9 @@ def index3(request, name, age):
 
 @login_required
 def sessiontest(request):
+    se = request.session
+    # session example
+    se['username'] = request.user.username
     return HttpResponse('session test')
 
 

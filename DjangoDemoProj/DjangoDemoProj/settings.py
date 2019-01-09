@@ -33,6 +33,8 @@ LOGIN_URL = '/admin/login/'
 # Age of cookie, in seconds (default: 2 weeks). We set it to 1 day
 SESSION_COOKIE_AGE = 60 * 60 * 24
 # Whether a user's session cookie expires when the Web browser is closed.
+# 浏览器关闭时session过期指的是在浏览器关闭时清除浏览器cookie中的的sessionid的值
+# 服务端在浏览器关闭时并不会删除session
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
@@ -57,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'helloworld.middleware.UserLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'DjangoDemoProj.urls'
