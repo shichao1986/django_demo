@@ -30,6 +30,11 @@ ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = '/admin/login/'
 
+# Age of cookie, in seconds (default: 2 weeks). We set it to 1 day
+SESSION_COOKIE_AGE = 60 * 60 * 24
+# Whether a user's session cookie expires when the Web browser is closed.
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # Application definition
 
 INSTALLED_APPS = [
