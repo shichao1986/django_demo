@@ -17,15 +17,15 @@ pool = redis.BlockingConnectionPool(max_connections=10, host=REDIS_HOST, port=RE
 
 class UserLoginMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if request.session:
+        if request.session is not None and request.session.session_key is not None:
             r = redis.Redis(connection_pool=pool)
             user_str = 'user_session_key_{}'.format(request.session['_auth_user_id'].zfill(10))
             if r.exists(user_str):
-                session_key = r.get(user_str)
-                if session_key != request.session.session_key:
-                    r.set(user_str, session_key)
+                last_session_key = r.get(user_str).decode()
+                if last_session_key != request.session.session_key:
+                    r.set(user_str, request.session.session_key)
                     # delete session in db
-                    session = SessionStore(session_key)
-                    session.delete()
+                    last_session = SessionStore(last_session_key)
+                    last_session.delete()
             else:
                 r.set(user_str, request.session.session_key)
