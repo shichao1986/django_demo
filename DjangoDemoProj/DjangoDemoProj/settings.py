@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'x12kp7non3*d#8fvq3s_$j^+n9@rbi%x)ilbb7v_w_h634dn=k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -243,7 +243,7 @@ LOGGING = {
         # },
         'django.db.backends':{
             'handlers':['console'],
-            'level':'DEBUG' if DEBUG else 'INFO'
+            'level':'INFO' if DEBUG else 'INFO'
         }
     }
 }
