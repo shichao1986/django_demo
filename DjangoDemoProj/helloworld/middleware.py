@@ -55,3 +55,5 @@ class UserLoginMiddleware(MiddlewareMixin):
             except Exception as e:
                 # 之前的session已经被删除掉
                 pass
+
+        return response

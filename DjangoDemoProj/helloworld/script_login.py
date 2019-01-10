@@ -1,57 +1,86 @@
 # coding: utf-8
 
+import sys
 import urllib3
 from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 
 http = urllib3.PoolManager()
-response = http.request('GET', 'http://10.6.3.29:8001/admin/login/')
-cookies = response.headers['Set-Cookie'].split(';')
-cookie_dict = {}
-for item in cookies:
-    item = item.strip()
-    key = item.split('=')[0]
-    value = item.split('=')[1]
-    cookie_dict[key] = value
-print('receive csrftoken={}'.format(cookie_dict['csrftoken']))
-csrftoken = cookie_dict['csrftoken']
-soup = BeautifulSoup(response.data.decode(), features='html.parser')
-csrfmiddlewaretoken = soup.form.input['value']
-print('receive csrfmiddlewaretoken={}'.format(csrfmiddlewaretoken))
 
-request_heads = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Encoding': 'gzip, deflate',
-    'Accept-Language': 'zh-CN,zh;q=0.9',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-    'Content-Length': 138,
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Cookie': 'csrftoken={}'.format(csrftoken),
-    'Host': '10.6.3.29:8001',
-    'Origin': 'http://10.6.3.29:8001',
-    'Pragma': 'no-cache',
-    'Referer': 'http://10.6.3.29:8001/admin/login/',
-    'Upgrade-Insecure-Requests': 1,
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
-}
-print('send cookie={}'.format(request_heads['Cookie']))
-fields = {
-    'csrfmiddlewaretoken': '{}'.format(csrfmiddlewaretoken),
-    'username': 'admin',
-    'password': 'password2018',
-    'next': '/admin/',
-}
-print('send csrfmiddlewaretoken={}'.format(fields['csrfmiddlewaretoken']))
+HOST = '10.6.3.29:8001'
+URI = '/admin/login/'
 
-# fields = urlencode(fields)
+def login(host, uri, debug=False):
 
-print('fields={}'.format(fields))
+    url = 'http://{}{}'.format(host, uri)
+    response = http.request('GET', url)
+    cookies = response.headers['Set-Cookie'].split(';')
 
-response = http.request('POST', 'http://10.6.3.29:8001/admin/login/', headers=request_heads, fields=fields,
-                        encode_multipart=False, redirect=False)
+    cookie_dict = {}
+    for item in cookies:
+        item = item.strip()
+        key = item.split('=')[0]
+        value = item.split('=')[1]
+        cookie_dict[key] = value
 
-# import pdb;pdb.set_trace()
+    if debug:
+        print('receive csrftoken={}'.format(cookie_dict['csrftoken']))
+
+    csrftoken = cookie_dict['csrftoken']
+    soup = BeautifulSoup(response.data.decode(), features='html.parser')
+    csrfmiddlewaretoken = soup.form.input['value']
+
+    if debug:
+        print('receive csrfmiddlewaretoken={}'.format(csrfmiddlewaretoken))
+
+    request_heads = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Content-Length': 138,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': 'csrftoken={}'.format(csrftoken),
+        'Host': '{}'.format(host),
+        'Origin': 'http://{}'.format(host),
+        'Pragma': 'no-cache',
+        'Referer': '{}'.format(url),
+        'Upgrade-Insecure-Requests': 1,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
+    }
+    if debug:
+        print('send cookie={}'.format(request_heads['Cookie']))
+
+    fields = {
+        'csrfmiddlewaretoken': '{}'.format(csrfmiddlewaretoken),
+        'username': 'admin',
+        'password': 'password2018',
+        'next': '/admin/',
+    }
+    if debug:
+        print('send csrfmiddlewaretoken={}'.format(fields['csrfmiddlewaretoken']))
+        print('fields={}'.format(fields))
+
+    response = http.request('POST', url, headers=request_heads, fields=fields, encode_multipart=False, redirect=False)
+
+    return response.status
+
+def main(argv=None):
+    if argv == None:
+        argv = sys.argv
+    try:
+        for i in range(10):
+            login(HOST, URI)
+    except Exception as e:
+        print(e)
+        return -1
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
+
 
 
 
