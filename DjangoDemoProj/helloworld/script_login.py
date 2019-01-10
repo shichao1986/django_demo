@@ -4,6 +4,7 @@ import sys
 import urllib3
 from urllib.parse import urlencode
 from bs4 import BeautifulSoup
+from multiprocessing import Pool, cpu_count, Process, Manager
 
 http = urllib3.PoolManager()
 
@@ -13,7 +14,18 @@ URI = '/admin/login/'
 def login(host, uri, debug=False):
 
     url = 'http://{}{}'.format(host, uri)
-    response = http.request('GET', url)
+    request_heads = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Host': '{}'.format(host),
+        'Pragma': 'no-cache',
+        'Upgrade-Insecure-Requests': 1,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
+    }
+    response = http.request('GET', url, headers=request_heads)
     cookies = response.headers['Set-Cookie'].split(';')
 
     cookie_dict = {}
@@ -66,15 +78,31 @@ def login(host, uri, debug=False):
 
     return response.status
 
-def main(argv=None):
-    if argv == None:
-        argv = sys.argv
+def foo():
     try:
-        for i in range(10):
+        while True:
             login(HOST, URI)
     except Exception as e:
         print(e)
-        return -1
+
+
+def main(argv=None):
+    if argv == None:
+        argv = sys.argv
+    # try:
+    #     for i in range(1000):
+    #         login(HOST, URI)
+    # except Exception as e:
+    #     print(e)
+    #     return -1
+
+    task_num = cpu_count() * 4
+    pool = Pool(processes=task_num)
+    for i in range(task_num):
+        pool.apply_async(foo)
+
+    pool.close()
+    pool.join()
 
     return 0
 
