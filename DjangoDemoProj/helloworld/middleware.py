@@ -37,3 +37,21 @@ class UserLoginMiddleware(MiddlewareMixin):
             except Exception as e:
                 # 之前的session已经被删除掉
                 pass
+
+    def process_response(self, request, response):
+        if request.session is not None and request.session.get('_auth_user_id', None) is not None:
+            try:
+                r = redis.Redis(connection_pool=pool)
+                user_str = 'user_session_key_{}'.format(request.session['_auth_user_id'].zfill(10))
+                if r.exists(user_str):
+                    last_session_key = r.get(user_str).decode()
+                    if last_session_key != request.session.session_key:
+                        r.set(user_str, request.session.session_key)
+                        # delete session in db
+                        last_session = SessionStore(last_session_key)
+                        last_session.delete()
+                else:
+                    r.set(user_str, request.session.session_key)
+            except Exception as e:
+                # 之前的session已经被删除掉
+                pass
