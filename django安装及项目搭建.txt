@@ -27,7 +27,9 @@ django教程参考连接：https://code.ziqiangxuetang.com/django
 12、本例程实现nginx+uwsgi+django的配置，nginx处理高并发的请求和静态资源的请求时性能超强，uwsgi实现了WSGI协议，WSGI是
 一种WEB服务器网关接口，是与WEB应用通信的一种规范，uwsgi可以提供多进程并处理高并发的网络请求，弥补了django单进程的缺陷
 13、使用supervisor管理nginx和uwsgi
-14、django支持单独启动也支持docker部署启动
+14、本django demo支持单独启动也支持docker部署启动
+15、添加自定义中间件，限制用户多点登录，其中用户的最新登录身份由redis保存（便于自动失效）
+16、添加自定义中间件，限制用户频繁访问，其中黑名单IP地址由redis保存（便于自动失效）
 
 问题记录：
 django 1.11.2

@@ -10,6 +10,8 @@ http = urllib3.PoolManager()
 
 HOST = '10.6.3.29:8001'
 URI = '/admin/login/'
+USERNAME = 'admin'
+PASSWORD = 'password2018'
 
 def login(host, uri, debug=False):
 
@@ -66,8 +68,8 @@ def login(host, uri, debug=False):
 
     fields = {
         'csrfmiddlewaretoken': '{}'.format(csrfmiddlewaretoken),
-        'username': 'admin',
-        'password': 'password2018',
+        'username': '{}'.format(USERNAME),
+        'password': '{}'.format(PASSWORD),
         'next': '/admin/',
     }
     if debug:
