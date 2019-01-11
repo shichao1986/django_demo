@@ -91,20 +91,20 @@ def foo():
 def main(argv=None):
     if argv == None:
         argv = sys.argv
-    # try:
-    #     for i in range(1000):
-    #         login(HOST, URI)
-    # except Exception as e:
-    #     print(e)
-    #     return -1
+    try:
+        for i in range(1000):
+            login(HOST, URI)
+    except Exception as e:
+        print(e)
+        return -1
 
-    task_num = cpu_count() * 4
-    pool = Pool(processes=task_num)
-    for i in range(task_num):
-        pool.apply_async(foo)
-
-    pool.close()
-    pool.join()
+    # task_num = cpu_count() * 4
+    # pool = Pool(processes=task_num)
+    # for i in range(task_num):
+    #     pool.apply_async(foo)
+    #
+    # pool.close()
+    # pool.join()
 
     return 0
 
