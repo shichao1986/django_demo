@@ -98,13 +98,14 @@ class UserLoginMiddleware(MiddlewareMixin):
             # 该黑名单应该存在一定的失效时间，而且应该尽量早的限制访问
             # 本例为了起到说明的作用所以仅将检查放在UserLoginMiddleware.process_request中
             if request.session.get('fast_access_start_time', None) is None:
-                request.session['fast_access_start_time'] = datetime.datetime.now()
+                request.session['fast_access_start_time'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 request.session['fast_access_count'] = 1
             else:
                 request.session['fast_access_count'] += 1
                 if request.session['fast_access_count'] > FAST_ACCESS_THRESHHOLD:
                     nowtime = datetime.datetime.now()
-                    if nowtime - request.session['fast_access_start_time'] <= FAST_ACCESS_INTERVAL:
+                    starttime = datetime.datetime.strptime(request.session['fast_access_start_time'], '%Y-%m-%d %H:%M:%S')
+                    if (nowtime - starttime).seconds <= FAST_ACCESS_INTERVAL:
                         ip_key = '{}/{}'.format(FAST_ACCESS_ACL_SET, request.META['REMOTE_ADDR'])
                         r.set(ip_key, 1, ex=FAST_ACCESS_FORBIDDEN)
 
