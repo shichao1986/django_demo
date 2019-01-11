@@ -79,6 +79,28 @@ class UserLoginMiddleware(MiddlewareMixin):
             last_session.delete()
         return
 
+    def _check_multiple_login(self, r, request):
+        user_login_key = '{}:{}'.format(MULTIPLE_LOGIN_USER, request.session['_auth_user_id'].zfill(10))
+        while True:
+            times = r.get(user_login_key)
+            if times is None:
+                # key 不存在时初始化定时器
+                if r.set(user_login_key, 1, nx=True, ex=MULTIPLE_LOGIN_INTERVAL):
+                    logger.debug('init {} 1'.format(user_login_key))
+                    break
+                    # 设置失败则重新获取key值
+            else:
+                # 获取key值检测次数，小于阈值+1，大于阈值添加黑名单
+                times = int(times)
+                if times < MULTIPLE_LOGIN_THRESHHOLD - 1:
+                    logger.debug('{}:incr 1'.format(user_login_key))
+                    r.incr(user_login_key, 1)
+                else:
+                    ip_key = '{}/{}'.format(ACL_BLACK_LIST, request.META['REMOTE_ADDR'])
+                    r.set(ip_key, 1, ex=MULTIPLE_LOGIN_FORBIDDEN)
+                    logger.debug('add ip {} to black list'.format(request.META['REMOTE_ADDR']))
+                break
+
     def process_response(self, request, response):
         if request.session is not None and request.session.get('_auth_user_id', None) is not None:
             # 限制多点登录
@@ -96,23 +118,7 @@ class UserLoginMiddleware(MiddlewareMixin):
 
                             # 此处增加用户多点登录频率检查，防止用户频繁多点登录
                             # 保护频繁被踢下线的账户的安全
-                            user_login_key = '{}:{}'.format(MULTIPLE_LOGIN_USER, request.session['_auth_user_id'].zfill(10))
-                            while True:
-                                times = r.get(user_login_key)
-                                if times is None:
-                                    # key 不存在时初始化定时器
-                                    if r.set(user_login_key, 1, nx=True, ex=MULTIPLE_LOGIN_INTERVAL):
-                                        break
-                                    # 设置失败则重新获取key值
-                                else:
-                                    # 获取key值检测次数，小于阈值+1，大于阈值添加黑名单
-                                    if times < MULTIPLE_LOGIN_THRESHHOLD - 1:
-                                        r.incr(user_login_key, 1)
-                                    else:
-                                        ip_key = '{}/{}'.format(ACL_BLACK_LIST, request.META['REMOTE_ADDR'])
-                                        r.set(ip_key, 1, ex=MULTIPLE_LOGIN_FORBIDDEN)
-                                        logger.debug('add ip {} to black list'.format(request.META['REMOTE_ADDR']))
-                                    break
+                            self._check_multiple_login(r, request)
                         break
                     else:
                         # 此分支失败，则说明发生并发登录，即同一账户在不同处同时登录，
@@ -121,6 +127,7 @@ class UserLoginMiddleware(MiddlewareMixin):
                             break
             except Exception as e:
                 # 之前的session已经被删除掉
+                logger.error(e)
                 pass
 
             # 限制短时间内的访问次数，大于阈值时将用户IP增加到黑名单
