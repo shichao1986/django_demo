@@ -241,9 +241,13 @@ LOGGING = {
         #     'level':'ERROR',
         #     'propagate':False
         # },
-        'django.db.backends':{
+        # 'django.db.backends':{
+        #     'handlers':['console'],
+        #     'level':'DEBUG' if DEBUG else 'INFO'
+        # },
+        'helloworld.middleware':{
             'handlers':['console'],
-            'level':'INFO' if DEBUG else 'INFO'
+            'level':'DEBUG' if DEBUG else 'INFO'
         }
     }
 }

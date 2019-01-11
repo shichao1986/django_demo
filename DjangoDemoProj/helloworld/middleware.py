@@ -14,6 +14,7 @@ from django.http import HttpResponse
 import redis
 import threading
 import datetime
+import logging
 
 REDIS_HOST = '10.6.3.29'
 REDIS_PORT = 16379
@@ -28,6 +29,8 @@ FAST_ACCESS_FORBIDDEN = 60
 FAST_ACCESS_ACL_SET = 'fast_access_acl_set'
 
 pool = redis.BlockingConnectionPool(max_connections=10, host=REDIS_HOST, port=REDIS_PORT)
+
+logger = logging.getLogger('helloworld.middleware')
 
 def sychronized(func):
     if not hasattr(func, '_t_lock'):
@@ -100,14 +103,18 @@ class UserLoginMiddleware(MiddlewareMixin):
             if request.session.get('fast_access_start_time', None) is None:
                 request.session['fast_access_start_time'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 request.session['fast_access_count'] = 1
+                logger.debug('fast_access init:{} - {}'.format(request.session['fast_access_start_time'],
+                                                               request.session['fast_access_count']))
             else:
                 request.session['fast_access_count'] += 1
+                logger.debug('fast_access_count add 1 = {}'.format(request.session['fast_access_count']))
                 if request.session['fast_access_count'] > FAST_ACCESS_THRESHHOLD:
                     nowtime = datetime.datetime.now()
                     starttime = datetime.datetime.strptime(request.session['fast_access_start_time'], '%Y-%m-%d %H:%M:%S')
                     if (nowtime - starttime).seconds <= FAST_ACCESS_INTERVAL:
                         ip_key = '{}/{}'.format(FAST_ACCESS_ACL_SET, request.META['REMOTE_ADDR'])
                         r.set(ip_key, 1, ex=FAST_ACCESS_FORBIDDEN)
+                        logger.debug('add ip {} to black list'.format(request.META['REMOTE_ADDR']))
 
                     del request.session['fast_access_start_time']
 
