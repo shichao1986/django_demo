@@ -5,6 +5,10 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import generics, mixins, views
+
 # Create your views here.
 
 def index(request, name, age):
