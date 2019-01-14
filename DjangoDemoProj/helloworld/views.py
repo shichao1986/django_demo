@@ -10,7 +10,7 @@ from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework import generics, mixins, views
+from rest_framework import generics, mixins, views, permissions, filters
 
 # Create your views here.
 
@@ -42,6 +42,11 @@ class PersonView(APIView):
         data = PersonSerializer(persons, many=True).data
 
         return Response(data={'status':200, 'data':data})
+
+class PersonViewSet(ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = permissions.IsAuthenticated
 
 # django queryset 操作方法
 # 查询
