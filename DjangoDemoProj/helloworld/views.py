@@ -40,6 +40,7 @@ def sessiontest(request):
 # 包括http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
 # 其中options未定义会由rest_framework帮助定义，其余未定义的方法则不支持
 class PersonView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
     def get(self, request):
         persons = Person.objects.all()
         data = PersonSerializer(persons, many=True).data
@@ -51,8 +52,8 @@ class PersonView(APIView):
 class PersonViewSet(ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
-    permission_classes = permissions.IsAuthenticated
-    filter_backends = filters.SearchFilter
+    permission_classes = (permissions.IsAuthenticated, )
+    filter_backends = (filters.SearchFilter, )
     search_fields = ('name', 'age')
 
 # django queryset 操作方法

@@ -11,5 +11,4 @@ urlpatterns = [
     url(r'^hello/session_test', hello_views.sessiontest, name='session_test'),
     url(r'^hello/rest/persons', hello_views.PersonView.as_view()),
     url(r'^hello/rest/persons2', hello_views.PersonViewSet.as_view({'get':'list'})),
-    url(r'^hello/rest/persons3', hello_views.PersonViewSet.as_view(actions={'get':'list'}, permission_classes=permissions.AllowAny)),
 ]
