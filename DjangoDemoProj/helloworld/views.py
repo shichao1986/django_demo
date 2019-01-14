@@ -40,7 +40,7 @@ def sessiontest(request):
 # 包括http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
 # 其中options未定义会由rest_framework帮助定义，其余未定义的方法则不支持
 class PersonView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     def get(self, request):
         persons = Person.objects.all()
         data = PersonSerializer(persons, many=True).data
