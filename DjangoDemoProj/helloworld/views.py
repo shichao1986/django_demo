@@ -4,8 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from .models import *
+from .serializers import *
 
 from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, mixins, views
 
@@ -33,7 +36,12 @@ def sessiontest(request):
     se['username'] = request.user.username
     return HttpResponse('session test')
 
+class PersonView(APIView):
+    def get(self, request):
+        persons = Person.objects.all()
+        data = PersonSerializer(persons, many=True).data
 
+        return Response(data={'status':200, 'data':data})
 
 # django queryset 操作方法
 # 查询
