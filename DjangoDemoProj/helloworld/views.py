@@ -36,6 +36,9 @@ def sessiontest(request):
     se['username'] = request.user.username
     return HttpResponse('session test')
 
+# 继承自APIView的类需要自定义各个http方法
+# 包括http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
+# 其中options未定义会由rest_framework帮助定义，其余未定义的方法则不支持
 class PersonView(APIView):
     def get(self, request):
         persons = Person.objects.all()
@@ -43,10 +46,14 @@ class PersonView(APIView):
 
         return Response(data={'status':200, 'data':data})
 
+# 继承自ViewSet的类在执行as_view时需要指明所使用的action
+# 即http方法与方法的对应关系，例如{'get':'list'}
 class PersonViewSet(ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     permission_classes = permissions.IsAuthenticated
+    filter_backends = filters.SearchFilter
+    search_fields = ('name', 'age')
 
 # django queryset 操作方法
 # 查询
