@@ -61,11 +61,12 @@ class PersonViewSetMethod(ModelViewSet):
     serializer_class = PersonSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    def __init__(self, **kwargs):
-        # 通过init参数设置类的参数
-        super(PersonViewSetMethod, self).__init__()
-        for key, value in kwargs.items():
-            setattr(self.cls, key, value)
+    @classmethod
+    def as_view(cls, actions=None, **initkwargs):
+        for key, value in initkwargs.items():
+            cls.__dict__[key] = value
+        return super(PersonViewSetMethod, cls).as_view(**initkwargs)
+
 
 # django queryset 操作方法
 # 查询
