@@ -13,8 +13,11 @@ urlpatterns = [
     # url的匹配规则，不要重复！！！
     url(r'^hello/rest/persons/', hello_views.PersonView.as_view(), name='hello_rest'),
     url(r'^hello/rest/persons2/',
-        hello_views.PersonViewSet.as_view({'get': 'list', 'post': 'create', 'put': 'update', 'delete': 'destroy'}),
+        hello_views.PersonViewSet.as_view({'get': 'list', 'post': 'create'}),
         name='hello_rest2'),
+    url(r'^hello/rest/persons2/(?P<pk>[0-9]+)/$',
+        hello_views.PersonViewSet.as_view({ 'put': 'update', 'delete': 'destroy'}),
+        name='hello_rest22'),
     url(r'^hello/rest/persons3/',
         hello_views.PersonViewSetMethod.as_view({'get': 'list'}, permission_classes=(permissions.AllowAny, )),
         name='hello_rest3'),
