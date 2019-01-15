@@ -56,6 +56,17 @@ class PersonViewSet(ModelViewSet):
     filter_backends = (filters.SearchFilter, )
     search_fields = ('name', 'age')
 
+class PersonViewSetMethod(ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def __init__(self, **kwargs):
+        # 通过init参数设置类的参数
+        super(PersonViewSetMethod, self).__init__()
+        for key, value in kwargs.items():
+            setattr(self.cls, key, value)
+
 # django queryset 操作方法
 # 查询
 # select_related，字表查询一次获得父表的信息
