@@ -6,4 +6,6 @@ from rest_framework import permissions
 
 class MyPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
+        if obj.age > 30:
+            return True
         return False
