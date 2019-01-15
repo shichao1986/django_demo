@@ -47,6 +47,10 @@ class Person(models.Model):
     class Meta:
         app_label = 'helloworld'
         db_table = 'person'
+        permissions = (
+            ('information.publish', '信息管理-发布信息'),
+            ('schoolmgmt.choose', '学校管理-学校选择'),
+        )
 
 # 人员和书籍的关系表
 class PersonBookRelation(models.Model):

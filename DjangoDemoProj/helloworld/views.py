@@ -57,8 +57,9 @@ class PersonViewSet(ModelViewSet):
     # DjangoModelPermissions 使用该用户在django中的对model的权限；
     # 另外，如果该用户是superuser，则该用户具有所有model的权限
     permission_classes = (permissions.IsAuthenticated, permissions.DjangoModelPermissions, MyPermissions)
-    filter_backends = (filters.SearchFilter, filters.DjangoObjectPermissionsFilter, MyFilter)
+    filter_backends = (filters.SearchFilter, MyFilter)
     search_fields = ('name', 'age')
+    module_perms = ['information.publish', 'schoolmgmt.choose']
 
     def get_permissions(self):
         if self.request.method in permissions.SAFE_METHODS:
