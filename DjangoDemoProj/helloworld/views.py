@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import *
 from .serializers import *
+from .my_permissions import *
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -52,20 +53,23 @@ class PersonView(APIView):
 class PersonViewSet(ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
-    permission_classes = (permissions.IsAuthenticated, )
+    # DjangoModelPermissions 使用该用户在django中的对model的权限；
+    # 另外，如果该用户是superuser，则该用户具有所有model的权限
+    permission_classes = (permissions.IsAuthenticated, permissions.DjangoModelPermissions, MyPermissions)
     filter_backends = (filters.SearchFilter, )
     search_fields = ('name', 'age')
 
+# 该viewset支持对method进行permission的设置
 class PersonViewSetMethod(ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, )
 
     @classmethod
     def as_view(cls, actions=None, **initkwargs):
         for key, value in initkwargs.items():
-            cls.__dict__[key] = value
-        return super(PersonViewSetMethod, cls).as_view(**initkwargs)
+            setattr(cls, key, value)
+        return super(PersonViewSetMethod, cls).as_view(actions, **initkwargs)
 
 
 # django queryset 操作方法
