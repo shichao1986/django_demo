@@ -59,6 +59,12 @@ class PersonViewSet(ModelViewSet):
     filter_backends = (filters.SearchFilter, )
     search_fields = ('name', 'age')
 
+    def get_permissions(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return [permissions.IsAuthenticated()]
+        else:
+            return [permission() for permission in self.permission_classes]
+
 # 该viewset支持对method进行permission的设置
 class PersonViewSetMethod(ModelViewSet):
     queryset = Person.objects.all()
