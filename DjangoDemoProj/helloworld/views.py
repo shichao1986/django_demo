@@ -7,6 +7,7 @@ from django.urls import reverse
 from .models import *
 from .serializers import *
 from .my_permissions import *
+from .my_filter import *
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -56,7 +57,7 @@ class PersonViewSet(ModelViewSet):
     # DjangoModelPermissions 使用该用户在django中的对model的权限；
     # 另外，如果该用户是superuser，则该用户具有所有model的权限
     permission_classes = (permissions.IsAuthenticated, permissions.DjangoModelPermissions, MyPermissions)
-    filter_backends = (filters.SearchFilter, )
+    filter_backends = (filters.SearchFilter, filters.DjangoObjectPermissionsFilter, MyFilter)
     search_fields = ('name', 'age')
 
     def get_permissions(self):
