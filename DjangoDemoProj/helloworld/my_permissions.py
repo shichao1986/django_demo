@@ -14,15 +14,15 @@ class MyPermissions(permissions.BasePermission):
         return False
 
     def get_module_perms(self, view):
-        return ['{}'.format(perm) for perm in view.module_perms]
+        return ['helloworld.{}'.format(perm) for perm in view.module_perms]
 
     # has_permission 用于检查用户是否有权限访问该view
     def has_permission(self, request, view):
-        return (
-            request.user and
-            (request.user.is_authenticated() or not self.authenticated_users_only) and
-            self.has_perms(request.user, self.get_module_perms(view))
-        )
+        if request.user and request.user.is_authenticated():
+            m_perms = self.get_module_perms(view)
+            return self.has_perms(request.user, m_perms)
+        else:
+            return False
 
     # 当has_permission 通过检查后
     # has_object_permission 检查具体数据库中某一条记录是否可以被修改
