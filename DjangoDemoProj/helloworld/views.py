@@ -1,5 +1,8 @@
 # coding: utf-8
 
+import io
+
+from urllib.parse import quote
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -15,7 +18,44 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, mixins, views, permissions, filters
 
+
 from import_export.admin import ImportMixin, ExportMixin
+from import_export import resources
+
+def get_attachment_response(file_obj, filename, file_type=None):
+    """
+
+    :param file_obj:
+    :param filename:
+    :param file_type:
+    :return:
+    """
+    err = ''
+
+    filename = quote(filename)
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    # filename*=UTF-8''+wb_name, 其中引号须为单引号，兼容ie\chrome\firefox
+    response['Content-Disposition'] = "attachment;filename*=UTF-8''%s" %(filename)
+
+    if file_type == 'path':
+        with open(file_obj, 'rb') as file:
+            buf = file.read()
+    elif file_type == 'bytes':
+        buf = file_obj
+    else:
+        output = io.BytesIO()
+        if hasattr(file_obj, 'save'):
+            file_obj.save(output)
+        else:
+            err = '不支持的附件类型！'
+            return (None, err)
+        output.seek(0)
+        buf = output.getvalue()
+
+    response.write(buf)
+
+    return (response, err)
+
 
 # Create your views here.
 
@@ -90,7 +130,18 @@ class PersonExport(ExportMixin, generics.GenericAPIView):
     resource_class = PersonResource
 
     def get(self, request):
-        return self.export_action(request)
+        resource = self.resource_class()
+        export_data = resource.export(self.get_queryset(), False)
+        # return Response(data={'status':200, 'data':'data...'})
+        # header = {'Content-Disposition':'attachment'}
+        # fp = open('tmpexcel.xlsx','wb')
+        # fp.write(export_data.xlsx)
+
+        (rsp, err) = get_attachment_response(export_data.xlsx, 'person.xlsx', file_type='bytes')
+        if not err:
+            return rsp
+
+        return Response('导出失败', status=400)
 
 
 # django queryset 操作方法
