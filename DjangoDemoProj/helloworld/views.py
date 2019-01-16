@@ -122,7 +122,7 @@ class PersonViewSetMethod(ModelViewSet):
             setattr(cls, key, value)
         return super(PersonViewSetMethod, cls).as_view(actions, **initkwargs)
 
-# 使用import_export 到处excel
+# 使用import_export 导出excel
 class PersonExport(ExportMixin, generics.GenericAPIView):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
@@ -132,10 +132,6 @@ class PersonExport(ExportMixin, generics.GenericAPIView):
     def get(self, request):
         resource = self.resource_class()
         export_data = resource.export(self.get_queryset(), False)
-        # return Response(data={'status':200, 'data':'data...'})
-        # header = {'Content-Disposition':'attachment'}
-        # fp = open('tmpexcel.xlsx','wb')
-        # fp.write(export_data.xlsx)
 
         (rsp, err) = get_attachment_response(export_data.xlsx, 'person.xlsx', file_type='bytes')
         if not err:
@@ -143,6 +139,8 @@ class PersonExport(ExportMixin, generics.GenericAPIView):
 
         return Response('导出失败', status=400)
 
+# 使用import export 导入excel比较复杂，略，后端应该使用更为易懂的方式
+# 例如直接继承rest_framwork 的 APIView 写post方法实现
 
 # django queryset 操作方法
 # 查询

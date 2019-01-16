@@ -13,7 +13,7 @@ dehydrate_%filed%是指你可以对某一列做一些定制，同类似serialize
 
 class PersonResource(resources.ModelResource):
     def dehydrate_books(self, obj):
-        return str(obj.books) if obj.books else '[]'
+        return ','.join([name[0] for name in obj.books.values_list('name').all()]) if obj.books.count() > 0 else ''
 
     def get_export_headers(self):
         return ['姓名', '年龄', '爱好', '自我介绍', '学校', '书籍']
