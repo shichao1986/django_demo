@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^hello/rest/persons2/$',
         hello_views.PersonViewSet.as_view({'get': 'list', 'post': 'create'}),
         name='hello_rest2'),
+    url(r'^hello/rest/persons2/export/$', hello_views.PersonExport.as_view(), name='hello_export'),
     url(r'^hello/rest/persons2/(?P<pk>[0-9]+)/$',
         hello_views.PersonViewSet.as_view({'get':'retrieve', 'put': 'update', 'delete': 'destroy'}),
         name='hello_rest22'),

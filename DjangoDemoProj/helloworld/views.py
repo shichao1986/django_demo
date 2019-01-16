@@ -8,11 +8,14 @@ from .models import *
 from .serializers import *
 from .my_permissions import *
 from .my_filter import *
+from .my_resource import *
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, mixins, views, permissions, filters
+
+from import_export.admin import ImportMixin, ExportMixin
 
 # Create your views here.
 
@@ -78,6 +81,16 @@ class PersonViewSetMethod(ModelViewSet):
         for key, value in initkwargs.items():
             setattr(cls, key, value)
         return super(PersonViewSetMethod, cls).as_view(actions, **initkwargs)
+
+# 使用import_export 到处excel
+class PersonExport(ExportMixin, generics.GenericAPIView):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (permissions.IsAuthenticated, permissions.DjangoModelPermissions)
+    resource_class = PersonResource
+
+    def get(self, request):
+        return self.export_action(request)
 
 
 # django queryset 操作方法

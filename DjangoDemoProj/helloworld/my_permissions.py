@@ -9,9 +9,9 @@ class MyPermissions(permissions.BasePermission):
     def has_perms(self, user, perms):
         user_perms = user.get_all_permissions()
         for perm in perms:
-            if perm in user_perms:
-                return True
-        return False
+            if perm not in user_perms:
+                return False
+        return True
 
     def get_module_perms(self, view):
         return ['helloworld.{}'.format(perm) for perm in view.module_perms]
