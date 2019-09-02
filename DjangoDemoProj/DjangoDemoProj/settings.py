@@ -239,11 +239,30 @@ LOGGING = {
             'level':'ERROR',
             'class':'django.utils.log.AdminEmailHandler',
             'formatter':'standard'
-        }
+        },
+        'rabbit': {
+            'level': 'DEBUG',
+            'class': 'python_logging_rabbitmq.RabbitMQHandler',
+            'host': 'rabbitmq.iot.cyai.com',
+            'username': 'platform',
+            'password': 'password',
+            'exchange': 'sys-log',
+            'declare_exchange': True,
+            'formatter': 'json',
+            'connection_params': {
+                'virtual_host': 'sys-log',
+                'connection_attempts': None,
+                'socket_timeout': 5000
+            },
+            'fields': {
+                'appname': 'djang_demo',
+                'hostip': '10.6.3.29'
+            }
+        },
     },
     'loggers':{
         'log1':{
-            'handlers':['console'],
+            'handlers':['console', 'rabbit'],
             'level':'DEBUG',
             'propagate': True
         },

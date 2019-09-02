@@ -14,6 +14,8 @@ COPY DjangoDemoProj/docker/nginx_supervisor.conf /etc/supervisor/conf.d/nginx_su
 COPY DjangoDemoProj/docker/supervisord.conf /etc/supervisor/supervisord.conf
 COPY DjangoDemoProj/docker/nginx.conf /etc/nginx/conf.d/nginx.conf
 
+RUN pip3 install -r ${PROJECT_DIR}/docker/requirements.txt
+
 ENTRYPOINT ["/usr/bin/supervisord"]
 CMD ["-n"]
 

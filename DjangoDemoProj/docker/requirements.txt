@@ -1,0 +1,1 @@
+python-logging-rabbitmq==1.0.7

@@ -22,6 +22,9 @@ from rest_framework import generics, mixins, views, permissions, filters
 from import_export.admin import ImportMixin, ExportMixin
 from import_export import resources
 
+logger = logging.getLogger('log1')
+
+
 def get_attachment_response(file_obj, filename, file_type=None):
     """
 
@@ -89,6 +92,7 @@ class PersonView(APIView):
     def get(self, request):
         persons = Person.objects.all()
         data = PersonSerializer(persons, many=True).data
+        logger.info('persons data={}'.format(data))
 
         return Response(data={'status':200, 'data':data})
 
